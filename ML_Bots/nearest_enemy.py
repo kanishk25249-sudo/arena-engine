@@ -1,6 +1,6 @@
 import math
 state = {
-    "bot_id": 2,
+    "bot_id": 3,
 
     "players": [
         {
