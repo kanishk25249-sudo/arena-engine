@@ -252,5 +252,111 @@ def execute_state(bot_state,
         )
 
 
+# BOUNDARY CHECK
 
+def boundary_check(action, bot):
+
+    if action["left"] == 1 and bot["x"] <= 0:
+        action["left"] = 0
+    if action["right"] == 1 and bot["x"] >= WORLD_WIDTH:
+        action["right"] = 0
+    if action["up"] == 1 and bot["y"] <= 0:
+        action["up"] = 0
+    if action["down"] == 1 and bot["y"] >= WORLD_HEIGHT:
+        action["down"] = 0
+
+# OBSTACLE DETECTION
+
+def obstacle_in_path(bot, target_enemy, obstacles):
+
+    path_left = min(bot["x"], target_enemy["x"])
+    path_right = max(bot["x"], target_enemy["x"])
+
+    path_top = min(bot["y"], target_enemy["y"])
+    path_bottom = max(bot["y"], target_enemy["y"])
+
+    for obstacle in obstacles:
+
+        obstacle_left = obstacle["x"]
+        obstacle_right = obstacle["x"] + obstacle["width"]
+        obstacle_top = obstacle["y"]
+        obstacle_bottom = obstacle["y"] + obstacle["height"]
+
+        x_overlap = (
+            obstacle_right >= path_left and
+            obstacle_left <= path_right
+        )
+        y_overlap = (
+            obstacle_bottom >= path_top and
+            obstacle_top <= path_bottom
+        )
+        if x_overlap and y_overlap:
+            return True
+
+    return False
+
+# SIMPLE OBSTACLE AVOIDANCE
+
+def avoid_obstacle(action, bot, target_enemy):
+
+    # Clearing previous movement
+    action["up"] = 0
+    action["down"] = 0
+    action["left"] = 0
+    action["right"] = 0
+
+    # Choosing vertical direction first
+    if bot["y"] < WORLD_HEIGHT / 2:
+        action["down"] = 1
+    else:
+        action["up"] = 1
+
+# FINAL ENVIRONMENT CHECK
+
+def environment_check(action, bot, target_enemy, state):
+
+    # Boundary
+    boundary_check(action, bot)
+
+    # Obstacles (if provided by engine)
+    if "obstacles" not in state:
+        return
+
+    if obstacle_in_path(bot, target_enemy, state["obstacles"]):
+
+        avoid_obstacle(
+            action,
+            bot,
+            target_enemy
+        )
+
+# DEBUG INFORMATION
+
+def print_debug(bot,
+                target_enemy,
+                bot_state,
+                can_move,
+                can_shoot,
+                action):
+
+    print("......................................")
+
+    print("Bot Position :",(bot["x"], bot["y"]))
+    print("Target Enemy :", target_enemy["id"])
+    print("Enemy HP :", target_enemy["health"])
+    print("Distance :", round(target_enemy["distance"], 2))
+
+    print()
+
+    print("FSM :", bot_state)
+    print("Can Move :", can_move)
+    print("Can Shoot :", can_shoot)
+
+    print()
+
+    print("Final Action")
+
+    print(action)
+
+    print("......................................")
 
