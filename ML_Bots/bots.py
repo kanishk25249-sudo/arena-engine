@@ -360,3 +360,116 @@ def print_debug(bot,
 
     print("......................................")
 
+
+# MAIN BOT FUNCTION
+
+def bot_decision(state):
+
+    # Find Bot
+
+    bot = find_bot(state)
+
+    if bot is None:
+        return None
+
+    # Finding Enemies
+
+    enemies = find_enemies(state, bot)
+
+    if len(enemies) == 0:
+        return create_action(bot)
+
+    # Selecting Target
+
+    target_enemy = select_target(enemies)
+
+    # FSM
+
+    bot_state = get_bot_state(bot,target_enemy)
+
+    # Tick Logic
+
+    can_move, can_shoot = get_tick_permissions(state,bot,target_enemy )
+
+    # Create Action
+
+    action = create_action(bot)
+
+    # Executing FSM
+
+    execute_state(
+        bot_state,
+        action,
+        bot,
+        target_enemy,
+        can_move,
+        can_shoot
+    )
+
+    # Environment Checks
+
+    environment_check(
+        action,
+        bot,
+        target_enemy,
+        state
+    )
+
+    # Debug
+
+    print_debug(
+        bot,
+        target_enemy,
+        bot_state,
+        can_move,
+        can_shoot,
+        action
+    )
+
+    return action
+
+
+# LOCAL TESTING
+
+if __name__ == "__main__":
+
+    state = {
+        "tick": 12,
+        "bot_id": 3,
+        "players": [
+            {
+                "id": 1,
+                "x": 100,
+                "y": 200,
+                "health": 40
+            },
+            {
+                "id": 2,
+                "x": 300,
+                "y": 250,
+                "health": 15
+            },
+            {
+                "id": 3,
+                "x": 500,
+                "y": 100,
+                "health": 70
+            }
+        ],
+        "obstacles": [
+            {
+                "id": 1,
+                "x": 250,
+                "y": 150,
+                "width": 100,
+                "height": 100
+            }
+        ]
+    }
+
+    action = bot_decision(state)
+
+    print()
+    
+    print("Returned Action")
+    print(action)
