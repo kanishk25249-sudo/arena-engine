@@ -90,3 +90,86 @@ print()
 print("Closed List")
 for node in closed_list:
     print("(",node.x,",",node.y,")")
+
+print()
+
+
+# Neighbouring Nodes
+
+neighbours = []
+
+# Left
+left = Node(current_node.x - 1, current_node.y)
+
+# Right
+right = Node(current_node.x + 1, current_node.y)
+
+# Up
+up = Node(current_node.x, current_node.y - 1)
+
+# Down
+down = Node(current_node.x, current_node.y + 1)
+
+neighbours.append(left)
+neighbours.append(right)
+neighbours.append(up)
+neighbours.append(down)
+
+print("Neighbour Nodes")
+
+for node in neighbours:
+    print("(", node.x, ",", node.y, ")")
+
+print()
+
+# Calculating g
+
+for node in neighbours:
+    # Every neighbour is exactly one step away
+    node.g = 1
+
+print("g Values")
+
+for node in neighbours:
+    print("(", node.x, ",", node.y, ")", "g =", node.g)
+
+print()
+
+# Calculating h
+
+for node in neighbours:
+    node.h = (abs(enemy.x - node.x)+
+        abs(enemy.y - node.y))
+
+print("h Values")
+
+for node in neighbours:
+    print("(", node.x, ",", node.y, ")", "h =", node.h)
+
+print()
+
+# Calculating f
+
+for node in neighbours:
+    node.f = node.g + node.h
+
+print("Neighbour Information")
+
+for node in neighbours:
+    print( "(", node.x, ",", node.y, ")", "g =", node.g, "h =", node.h, "f =", node.f)
+
+print()
+
+# FINDING BEST NEIGHBOUR
+
+best_node = neighbours[0]
+
+for node in neighbours:
+    if node.f < best_node.f:
+        best_node = node
+
+print("Best Neighbour")
+print( "(", best_node.x, ",", best_node.y, ")")
+print("g =", best_node.g)
+print("h =", best_node.h)
+print("f =", best_node.f)
