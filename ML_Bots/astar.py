@@ -100,15 +100,20 @@ neighbours = []
 
 # Left
 left = Node(current_node.x - 1, current_node.y)
+left.parent = current_node
 
 # Right
 right = Node(current_node.x + 1, current_node.y)
+right.parent = current_node
 
 # Up
 up = Node(current_node.x, current_node.y - 1)
+up.parent = current_node
 
 # Down
 down = Node(current_node.x, current_node.y + 1)
+down.parent = current_node
+
 
 neighbours.append(left)
 neighbours.append(right)
@@ -126,7 +131,7 @@ print()
 
 for node in neighbours:
     # Every neighbour is exactly one step away
-    node.g = 1
+    node.g = current_node.g + 1
 
 print("g Values")
 
@@ -168,8 +173,15 @@ for node in neighbours:
     if node.f < best_node.f:
         best_node = node
 
+    elif node.f == best_node.f:
+        if node.h < best_node.h:
+            best_node = node
+
 print("Best Neighbour")
 print( "(", best_node.x, ",", best_node.y, ")")
 print("g =", best_node.g)
 print("h =", best_node.h)
 print("f =", best_node.f)
+
+if best_node.parent != None:
+    print("Parent =", "(", best_node.parent.x, ",", best_node.parent.y, ")")
