@@ -78,15 +78,24 @@ def in_closed_list(node, closed_list):
 
     return False
 
-# OPEN LIST CHECK
+# OPEN LIST UPDATE
 
-def in_open_list(node, open_list):
+def update_open_list(node, open_list):
 
     for open_node in open_list:
         if (node.x == open_node.x and node.y == open_node.y):
-            return True
 
-    return False
+            # Better path found
+            if node.g < open_node.g:
+                open_node.g = node.g
+                open_node.h = node.h
+                open_node.f = node.f
+                open_node.parent = node.parent
+
+            return
+
+    # Node not present
+    open_list.append(node)
 
 # BOT
 
@@ -106,8 +115,6 @@ open_list.append(bot)
 closed_list = []
 
 # SEARCH
-
-i = 0
 
 while len(open_list) > 0:
 
@@ -132,31 +139,11 @@ while len(open_list) > 0:
     for node in neighbours:
         if in_closed_list( node, closed_list):
             continue
-        if in_open_list(node, open_list):
-            continue
 
-        open_list.append(node)
-
-    print()
-
-    print("Open List")
-
-    for node in open_list:
-        print( "(", node.x, ",", node.y, ")", "g =", node.g, "h =", node.h, "f =", node.f)
-
-    print()
-
-    print("Closed List")
-
-    for node in closed_list:
-
-        print( "(", node.x, ",", node.y, ")")
+        update_open_list(node, open_list)
 
     print()
     
-    print("Open List Size :", len(open_list))
-    print("Closed List Size :", len(closed_list))
-
 path = []
 node = current_node
 
