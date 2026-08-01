@@ -110,16 +110,14 @@ closed_list = []
 i = 0
 
 while len(open_list) > 0:
-    i = i + 1
-
-    if i > 10:
-
-        print()
-
-        print("Stopping after 10 iterations")
-        break
 
     current_node = get_best_node(open_list)
+    if (current_node.x == enemy.x and current_node.y == enemy.y):
+        print()
+
+        print("Goal Reached")
+        break
+
     open_list.remove(current_node)
     closed_list.append(current_node)
 
@@ -158,3 +156,21 @@ while len(open_list) > 0:
     
     print("Open List Size :", len(open_list))
     print("Closed List Size :", len(closed_list))
+
+path = []
+node = current_node
+
+while node != None:
+    path.append(node)
+    node = node.parent
+
+path.reverse()
+
+print()
+
+print("Shortest Path")
+
+print()
+
+for node in path:
+    print("(", node.x, ",", node.y, ")")
