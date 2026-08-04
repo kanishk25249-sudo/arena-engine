@@ -97,67 +97,60 @@ def update_open_list(node, open_list):
     # Node not present
     open_list.append(node)
 
-# BOT
+# FIND PATH
 
-bot = Node(2, 2)
+def find_path(bot_x, bot_y, enemy_x, enemy_y):
 
-# ENEMY
+    bot = Node(bot_x, bot_y)
+    enemy = Node(enemy_x, enemy_y)
 
-enemy = Node(20, 15)
+    open_list = []
+    closed_list = []
+    goal_reached = False
 
-# OPEN LIST
+    open_list.append(bot)
 
-open_list = []
-open_list.append(bot)
+    while len(open_list) > 0:
+        current_node = get_best_node(open_list)
 
-# CLOSED LIST
+        open_list.remove(current_node)
+        closed_list.append(current_node)
 
-closed_list = []
+        if (current_node.x == enemy.x and current_node.y == enemy.y):
+            goal_reached = True
+            break
 
-# SEARCH
+        neighbours = generate_neighbours(current_node)
 
-while len(open_list) > 0:
+        calculate_costs(neighbours, current_node, enemy)
 
-    current_node = get_best_node(open_list)
-    if (current_node.x == enemy.x and current_node.y == enemy.y):
-        print()
+        for node in neighbours:
+            if in_closed_list(node, closed_list):
+                continue
 
-        print("Goal Reached")
-        break
+            update_open_list(node, open_list)
 
-    open_list.remove(current_node)
-    closed_list.append(current_node)
-
-    print()
-
-    print("Current Node :", "(", current_node.x, ",", current_node.y, ")")
-
-    neighbours = generate_neighbours(current_node)
-
-    calculate_costs(neighbours, current_node, enemy)
-
-    for node in neighbours:
-        if in_closed_list( node, closed_list):
-            continue
-
-        update_open_list(node, open_list)
-
-    print()
+    if not goal_reached:
+        return []
     
-path = []
-node = current_node
+    path = []
+    node = current_node
 
-while node != None:
-    path.append(node)
-    node = node.parent
+    while node is not None:
+        path.append(node)
+        node = node.parent
 
-path.reverse()
+    path.reverse()
+    return path
 
-print()
+if __name__ == "__main__":
+    path = find_path(2, 2, 20, 15)
 
-print("Shortest Path")
+    print()
 
-print()
+    print("Shortest Path")
 
-for node in path:
-    print("(", node.x, ",", node.y, ")")
+    print()
+
+    for node in path:
+        print("(", node.x, ",", node.y, ")")
