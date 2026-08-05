@@ -1,4 +1,5 @@
 import math
+from astar_search import find_path 
 
 # GAME CONSTANTS
 
@@ -110,7 +111,7 @@ def select_target(enemies):
                 target_enemy = enemy
 
         return target_enemy
-
+    
 
 # FSM
 
@@ -183,13 +184,29 @@ def create_action(bot):
 # CHASE
 
 def chase(action, bot, target_enemy):
-    if target_enemy["x"] > bot["x"]:
+
+    path = find_path(
+        bot["x"],
+        bot["y"],
+        target_enemy["x"],
+        target_enemy["y"]
+    )
+
+    if len(path) <= 1:
+        return
+
+    next_node = path[1]
+
+    dx = next_node.x - bot["x"]
+    dy = next_node.y - bot["y"]
+
+    if dx > 0:
         action["right"] = 1
-    elif target_enemy["x"] < bot["x"]:
+    elif dx < 0:
         action["left"] = 1
-    if target_enemy["y"] > bot["y"]:
+    if dy > 0:
         action["down"] = 1
-    elif target_enemy["y"] < bot["y"]:
+    elif dy < 0:
         action["up"] = 1
 
 # RETREAT
