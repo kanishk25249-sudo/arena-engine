@@ -16,6 +16,7 @@ ATTACK_RANGE = 150
 CRITICAL_TARGET_HP = 25
 FINISH_OFF_HP = 10
 RETREAT_HP = 30
+CELL_SIZE = 20
 
 # HELPER FUNCTIONS
 
@@ -197,8 +198,11 @@ def chase(action, bot, target_enemy):
 
     next_node = path[1]
 
-    dx = next_node.x - bot["x"]
-    dy = next_node.y - bot["y"]
+    bot_grid_x = bot["x"] // CELL_SIZE
+    bot_grid_y = bot["y"] // CELL_SIZE
+
+    dx = next_node.x - bot_grid_x
+    dy = next_node.y - bot_grid_y
 
     if dx > 0:
         action["right"] = 1
