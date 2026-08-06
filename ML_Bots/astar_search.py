@@ -1,3 +1,5 @@
+CELL_SIZE = 20
+
 class Node:
 
     def __init__(self, x, y):
@@ -101,8 +103,8 @@ def update_open_list(node, open_list):
 
 def find_path(bot_x, bot_y, enemy_x, enemy_y):
 
-    bot = Node(bot_x, bot_y)
-    enemy = Node(enemy_x, enemy_y)
+    bot = Node(bot_x // CELL_SIZE, bot_y // CELL_SIZE)
+    enemy = Node(enemy_x // CELL_SIZE, enemy_y // CELL_SIZE)
 
     open_list = []
     closed_list = []
@@ -144,7 +146,7 @@ def find_path(bot_x, bot_y, enemy_x, enemy_y):
     return path
 
 if __name__ == "__main__":
-    path = find_path(2, 2, 20, 15)
+    path = find_path(537, 184, 261, 493)
 
     print()
 
